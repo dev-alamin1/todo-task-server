@@ -70,6 +70,25 @@ async function run()
                 return res.send(result)
          });
 
+         //add comment on completed task
+
+         app.put('/add-comment',async(req,res)=>{
+            const commentInfo = req.body;
+
+            const filter = { _id: ObjectId(commentInfo.commentId) };
+            const options = { upsert: true };
+
+            const updateDoc = {
+                $set: {
+                    comment: commentInfo.textComment
+                },
+              };
+
+            const result = await taskCollections.updateOne(filter,updateDoc,options);
+            return res.send(result)
+             
+         });
+
 
          app.put('/update-not-complete-status/:id',async(req,res)=>{
             const taskCompleteId = req.params.id;
