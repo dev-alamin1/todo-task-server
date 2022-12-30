@@ -20,6 +20,7 @@ async function run()
 {
     try{
          const taskCollections = client.db('todo-app').collection('taskCollection');
+         const mediaTaskCollections = client.db('todo-app').collection('mediaTaskCollection');
 
          //store to-do task
 
@@ -155,6 +156,47 @@ async function run()
             return res.send(result)
      });
 
+     // task save for media route 
+
+     app.post('/add-task',async(req,res)=>{
+        const taskInfo = req.body;
+        const result = await mediaTaskCollections.insertOne(taskInfo);
+        return res.send(result);
+     });
+
+     // get all meadi and task
+
+     app.get('/media-task',async(req,res)=>{
+        const query = {};
+        const allMediaTasks = await mediaTaskCollections.find(query).toArray();
+        return res.send(allMediaTasks);
+     })
+
+      // media task delete 
+
+      app.delete('/media-tast-delete/:id',async(req,res)=>{
+        const deleteId = req.params.id;
+        const query = {
+            _id: ObjectId(deleteId)
+        }
+
+        const result = await mediaTaskCollections.deleteOne(query);
+
+        return res.send(result);
+
+     });
+
+     // single media task details load 
+
+     app.get('/media-task-details/:id',async(req,res)=>{
+        const id = req.params.id;
+        const query = {
+          _id: ObjectId(id)
+        }
+
+        const task = await mediaTaskCollections.findOne(query);
+        return res.send(task)
+   });
 
 
     }
