@@ -199,6 +199,32 @@ async function run()
    });
 
 
+   // update task
+
+   app.put('/update-media-task/:id',async(req,res)=>{
+    const updateTaskId = req.params.id;
+    const taskInfo = req.body;
+    const taskNewName = taskInfo.taskName;
+    const taskImage = taskInfo.taskImg;
+    const taskDetail = taskInfo.taskDetails;
+
+    
+    const filter = { _id: ObjectId(updateTaskId) };
+    const options = { upsert: true };
+
+    const updateDoc = {
+        $set: {
+            taskName: taskNewName,
+            taskDetails:taskDetail
+        },
+      };
+
+
+    const result = await mediaTaskCollections.updateOne(filter,updateDoc,options);
+    return res.send(result)
+});
+
+
     }
     finally{
 
